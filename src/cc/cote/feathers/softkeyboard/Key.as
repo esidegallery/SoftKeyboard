@@ -9,6 +9,9 @@ This library is provided "as is" with no guarantees whatsoever. Use it at your o
 
 package cc.cote.feathers.softkeyboard
 {
+	import feathers.controls.Label;
+	import feathers.core.FeathersControl;
+
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.events.TimerEvent;
@@ -16,10 +19,7 @@ package cc.cote.feathers.softkeyboard
 	import flash.text.engine.TypographicCase;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
-	
-	import feathers.controls.Label;
-	import feathers.core.FeathersControl;
-	
+
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -84,7 +84,7 @@ package cc.cote.feathers.softkeyboard
 		public static const HOVER_STATE:String = 'Hover';
 		
 		/** Array of valid key states */
-		public const AVAILABLE_STATES:Array = [UP_STATE, DOWN_STATE, HOVER_STATE];
+		public static const AVAILABLE_STATES:Vector.<String> = new <String>[UP_STATE, DOWN_STATE, HOVER_STATE];
 		
 		/** An identifier for regular alphanumeric character keys. */
 		public static const CHARACTER_KEY:String = 'characterKey';
@@ -191,16 +191,8 @@ package cc.cote.feathers.softkeyboard
 		 * @param switchToClass A layout (specified by its class) to switch to when the key is 
 		 * released. Only works with <code>SoftKeyboard.SWITCH_LAYOUT</code> keys.
 		 */
-		public function Key(
-			charCode:int,
-			variants:Vector.<Key> = null,
-			type:String = 'characterKey',
-			label:String = null, 
-			relativeWidth:Number = 1,
-			relativeHeight:Number = 1,
-			switchToLayoutClass:Class = null
-		) {
-
+		public function Key(charCode:int, variants:Vector.<Key> = null, type:String = 'characterKey', label:String = null, relativeWidth:Number = 1, relativeHeight:Number = 1,	switchToLayoutClass:Class = null) 
+		{
 			// Keep parameters locally
 			_charCode = charCode;
 			_variants = variants;
@@ -210,66 +202,84 @@ package cc.cote.feathers.softkeyboard
 			this.switchToLayoutClass = switchToLayoutClass;
 			
 			// Flag each variant as such (if any)
-			if (variants) {
-				for each (var k:Key in variants) k.isVariant = true;
+			if (variants)
+			{
+				for each (var k:Key in variants) 
+				{
+					k.isVariant = true;
+				}
 			}
 
 			// Create the label and name it so it can be specifically styled through a theme
 			_label = new Label();
-			_label.nameList.add(SOFTKEYBOARD_KEY_LABEL);
+			_label.styleNameList.add(SOFTKEYBOARD_KEY_LABEL);
 			
 			// Define the label. If no label has been specified, use the character as the label (if 
 			// printable and visible). By the same token, assign names to the individual label for
 			// custom skinning.
-			if (label != null) {
+			if (label != null) 
+			{
 				_label.text = label;
-				if (label == '') {
-					_label.nameList.add('SPACE');
-					nameList.add('SPACE');
-				} else {
-					_label.nameList.add(label.replace(' ', '_'));
-					nameList.add(label.replace(' ', '_'));
+				if (label == '') 
+				{
+					_label.styleNameList.add('SPACE');
+					styleNameList.add('SPACE');
 				}
-			} else if (isPrintable && isVisible) {
+				else 
+				{
+					_label.styleNameList.add(label.replace(' ', '_'));
+					styleNameList.add(label.replace(' ', '_'));
+				}
+			} 
+			else if (isPrintable && isVisible)
+			{
 				_character = String.fromCharCode(_charCode);
 				_label.text = character;
-				_label.nameList.add(character);
-				nameList.add(character);
-			} else if (isPrintable) {
+				_label.styleNameList.add(character);
+				styleNameList.add(character);
+			} 
+			else if (isPrintable) 
+			{
 				_character = String.fromCharCode(_charCode);
 			}
-			
 			
 			// A string representation of the charCode is added to the nameList so keys can be 
 			// styled individually (if needed). 
-			nameList.add('charCode' + String(charCode));
-			_label.nameList.add('charCode' + String(charCode));
+			styleNameList.add('charCode' + String(charCode));
+			_label.styleNameList.add('charCode' + String(charCode));
 			
 			// Modify the name list to reflect the fact that a key has variants
-			if (variants) {
-				nameList.add('hasVariants');
-				_label.nameList.add('hasVariants');
+			if (variants)
+			{
+				styleNameList.add('hasVariants');
+				_label.styleNameList.add('hasVariants');
 			}
 			
 			// If the key is the special SPACER type, hide it
-			if (_charCode == CharCode.SPACER) visible = false;
-			
+			if (_charCode == CharCode.SPACER) 
+			{
+				visible = false;
+			}
 		}
 
 		/** @private */
-		override protected function initialize():void {
-			
+		override protected function initialize():void 
+		{
 			// This is for desktop usage and easier debugging
 			useHandCursor = true;
 			
 			// If there are variants, prepare the timer and the container.
-			if (_variants) {
+			if (_variants)
+			{
 				_variantsTimer = new Timer(keyVariantsDelay, 1);
 				_variantsContainer = new Sprite();
 			}
 			
 			// Assign icon (if any has been defined in the theme)
-			if (icon) _icon = icon;
+			if (icon) 
+			{
+				_icon = icon;
+			}
 			
 			// Assign default state. This also loads the appropriate skin (uses builtin default if 
 			// none is available) 
@@ -277,7 +287,8 @@ package cc.cote.feathers.softkeyboard
 			addChild(_skin);
 			
 			// If an icon is specified, the label is made invisible
-			if (_icon) {
+			if (_icon) 
+			{
 				_label.visible = false;
 				addChild(_icon);
 			}
@@ -291,22 +302,25 @@ package cc.cote.feathers.softkeyboard
 		}
 		
 		/** @private */
-		private function _onRemovedFromStage():void {
-			
-			if (_variantsTimer) {
+		private function _onRemovedFromStage():void 
+		{
+			if (_variantsTimer) 
+			{
 				_variantsTimer.stop();
-				if (_variantsTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
+				if (_variantsTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) 
+				{
 					_variantsTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _onShowAlternates);
 				}
 			}
-			
 		}
 		
-		override public function dispose():void {
-			
-			if (_variantsTimer) {
+		override public function dispose():void 
+		{
+			if (_variantsTimer) 
+			{
 				_variantsTimer.stop();
-				if (_variantsTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
+				if (_variantsTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) 
+				{
 					_variantsTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _onShowAlternates);
 				}
 			}
@@ -317,10 +331,9 @@ package cc.cote.feathers.softkeyboard
 			super.dispose();
 		}
 		
-		
 		/** @private */
-		override protected function draw():void {
-			
+		override protected function draw():void 
+		{
 //			if (_skin) {
 				setSizeInternal(_skin.width, _skin.height, false);
 				_skin.width = width;
@@ -336,11 +349,11 @@ package cc.cote.feathers.softkeyboard
 			_label.y = _skin.height / 2 - _label.height / 2;
 			
 			// If an icon has been defined, center it.
-			if (_icon) {
+			if (_icon) 
+			{
 				_icon.x = width / 2 - _icon.width / 2;
 				_icon.y = height / 2 - _icon.height / 2;
 			}
-			
 		}
 		
 		/**
@@ -349,8 +362,8 @@ package cc.cote.feathers.softkeyboard
 		 * @param state The state to change to. Allowed states are defined in the 
 		 * <code>AVAILABLE_STATES</code> constant array.
 		 */
-		public function changeState(state:String):void {
-			
+		public function changeState(state:String):void 
+		{
 			// If the state is invalid or not being changed, abort!
 			if (AVAILABLE_STATES.indexOf(state) == -1 || state == _state) return;
 			_state = state;
@@ -374,18 +387,18 @@ package cc.cote.feathers.softkeyboard
 			// Insert new skin
 			addChildAt(_skin, 0);
 			invalidate(INVALIDATION_FLAG_SKIN);
-			
 		}
 		
 		/** @private */
-		private function _onTouch(e:TouchEvent):void {
-			
+		private function _onTouch(e:TouchEvent):void 
+		{
 			// Retrieve touch
 			var touch:Touch = e.getTouch(this);
 			
 			// Check if the event is a MOUSE_OUT (which, in Starling, is a TouchEvent with no touch
 			// object attached)
-			if (!touch) {
+			if (!touch) 
+			{
 				changeState(UP_STATE);
 				return;
 			}
@@ -394,72 +407,83 @@ package cc.cote.feathers.softkeyboard
 			var touchPosInOriginalKeySpace:Point = touch.getLocation(this);
 			var touchPosInAltKeySpace:Point;
 			
-			if (touch.phase == TouchPhase.BEGAN) {
-				
+			if (touch.phase == TouchPhase.BEGAN) 
+			{
 				changeState(DOWN_STATE);
 				
 				// Trigger keyDown event (unless its the SWITCH_LAYOUT button which is ignored)				
-				if (charCode != CharCode.SWITCH_LAYOUT) {
+				if (charCode != CharCode.SWITCH_LAYOUT) 
+				{
 					_triggerEvent(this, KeyEvent.KEY_DOWN);
 				}
 				
 				// Check if the key has variants attached to it
-				if (variants) {
+				if (variants) 
+				{
 					_variantsTimer.start();
 					_variantsTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _onShowAlternates);
 				}
 				
-			} else if (touch.phase == TouchPhase.HOVER) {
-				
+			} 
+			else if (touch.phase == TouchPhase.HOVER) 
+			{
 				// For mouse input only
 				changeState(HOVER_STATE);
-				
-			} else if (touch.phase == TouchPhase.MOVED) { // Moving while pressing
-			
+			}
+			else if (touch.phase == TouchPhase.MOVED) // Moving while pressing
+			{
 				// Check if the user is staying over the original key when moving or not.
-				if ( hitTest(touchPosInOriginalKeySpace, true) ) {
+				if (hitTest(touchPosInOriginalKeySpace))
+				{
 					changeState(DOWN_STATE);
 					if (variants && !_variantsTimer.running) _variantsTimer.start();
-				} else {
+				}
+				else 
+				{
 					changeState(UP_STATE);
-					if (variants) _variantsTimer.reset();
+					if (variants)
+					{
+						_variantsTimer.reset();
+					}
 				}
 				
 				// If the key has variants and the variants are currently being displayed, check if
 				// one should be highlighted
-				if (variants && _variantsContainer.numChildren > 0) {
-					
+				if (variants && _variantsContainer.numChildren > 0) 
+				{
 					// Loop through all alternate keys to see if we are above one
-					for each (var altKey:Key in variants) {
-						
+					for each (var altKey:Key in variants) 
+					{
 						touchPosInAltKeySpace = touch.getLocation(altKey);
 						
-						if ( altKey.hitTest(touchPosInAltKeySpace, true) ) {
+						if (altKey.hitTest(touchPosInAltKeySpace)) 
+						{
 							altKey.changeState(DOWN_STATE);
-						} else {
+						} 
+						else 
+						{
 							altKey.changeState(UP_STATE);
 						}
-						
 					}
-					
 				}
 				
-				
-			} else if (touch.phase == TouchPhase.ENDED) {
-				
-				if (variants) {
-					
+			} 
+			else if (touch.phase == TouchPhase.ENDED) 
+			{
+				if (variants) 
+				{
 					// Reset
 					_variantsTimer.removeEventListener(TimerEvent.TIMER, _onShowAlternates);
 					_variantsTimer.reset();
 					
 					// Loop through all alternate keys to see if we are above one of them. If it's
 					// the case, trigger event for that variant key
-					for each (var altK:Key in variants) {
-						
+					for each (var altK:Key in variants) 
+					{
 						touchPosInAltKeySpace = touch.getLocation(altK);
 						
-						if ( altK.hitTest(touchPosInAltKeySpace, true) ) {
+						if (altK.hitTest(touchPosInAltKeySpace)) 
+						{
 							_triggerEvent(altK, KeyEvent.KEY_UP);
 							altK.changeState(UP_STATE);
 							break;
@@ -468,39 +492,39 @@ package cc.cote.feathers.softkeyboard
 					
 					// Empty the callout container when done.
 					_variantsContainer.removeChildren();
-					
 				}
 				
 				// Abort if the release is outside the original key
-				if ( !hitTest(touchPosInOriginalKeySpace, true) ) return;
-				
+				if (!hitTest(touchPosInOriginalKeySpace)) 
+				{
+					return;
+				}
+
 				// Trigger event
 				changeState(UP_STATE);
 				_triggerEvent(this, KeyEvent.KEY_UP);
-				
 			}
-			
 		}
 		
 		/** @private */
-		private function _triggerEvent(key:Key, type:String):void {
-			
+		private function _triggerEvent(key:Key, type:String):void 
+		{
 			// Trigger requested keyboard event
 			var event:KeyEvent = new KeyEvent(
 				type,
 				key.charCode,
 				key.character
-			)
+			);
 			dispatchEvent(event);
-			
 		}
 		
 		/** @private */
-		private function _onShowAlternates(e:TimerEvent):void {
-
+		private function _onShowAlternates(e:TimerEvent):void 
+		{
 			// Place variants in the container
 			var pos:Point = new Point();
-			for each (var altKey:Key in variants) {
+			for each (var altKey:Key in variants) 
+			{
 				_variantsContainer.addChild(altKey);
 				altKey.x = pos.x;
 				altKey.width = width;
@@ -515,7 +539,6 @@ package cc.cote.feathers.softkeyboard
 				character
 			)
 			dispatchEvent(event);
-			
 		}
 		
 		/**
@@ -525,55 +548,65 @@ package cc.cote.feathers.softkeyboard
 		 * @param keyCase Desired case: <code>TypographicCase.UPPERCASE</code> or 
 		 * <code>TypographicCase.LOWERCASE</code>.
 		 */
-		public function changeCase(keyCase:String):void {
-			
-			if (keyCase == TypographicCase.UPPERCASE) {
+		public function changeCase(keyCase:String):void 
+		{
+			if (keyCase == TypographicCase.UPPERCASE) 
+			{
 				uppercase();
-			} else if (keyCase == TypographicCase.LOWERCASE) {
+			} 
+			else if (keyCase == TypographicCase.LOWERCASE) 
+			{
 				lowercase();
 			}
-			
 		}
 		
 		/**
 		 * Uppercases the character, label and variants of the key. This only affects keys whose 
 		 * <code>isVisible</code> property return <code>true</code>.
 		 */		
-		public function uppercase():void {
-			
-			if (isVisible) {
+		public function uppercase():void 
+		{
+			if (isVisible) 
+			{
 				_label.text = _label.text.toLocaleUpperCase();
 				_character = character.toLocaleUpperCase();
 				_charCode = _character.charCodeAt();
 				
-				for each (var k:Key in _variants) {
-					if (k.isVisible) k.uppercase();
+				for each (var k:Key in _variants) 
+				{
+					if (k.isVisible) 
+					{
+						k.uppercase();
+					}
 				}
 			}
-			
 		}
 		
 		/**
 		 * Lowercases the character, label and variants of the key. This only affects keys whose 
 		 * <code>isVisible</code> property return <code>true</code>.
 		 */
-		public function lowercase():void {
-			
-			if (isVisible) {
+		public function lowercase():void 
+		{
+			if (isVisible) 
+			{
 				_label.text = _label.text.toLocaleLowerCase();
 				_character = character.toLocaleLowerCase();				
 				_charCode = _character.charCodeAt();
 				
-				for each (var k:Key in _variants) {
-					if (k.isVisible) k.lowercase();
+				for each (var k:Key in _variants) 
+				{
+					if (k.isVisible) 
+					{
+						k.lowercase();
+					}
 				}
 			}
-			
 		}
 		
 		/** @private */
-		private function _buildGenericSkin():DisplayObject {
-			
+		private function _buildGenericSkin():DisplayObject 
+		{
 			// Temporarily draw into a Shape object
 			var canvas:Shape = new Shape();
 			canvas.graphics.beginFill(0x666666);
@@ -585,31 +618,35 @@ package cc.cote.feathers.softkeyboard
 			bmd.draw(canvas);
 			var texture:Texture = Texture.fromBitmapData(bmd);
 			return new Image(texture);
-			
 		}
 		
 		/** Relative width of the key expressed as a ratio of the default key width. */
-		public function get relativeWidth():Number { 
+		public function get relativeWidth():Number
+		{ 
 			return _relativeWidth; 
 		}
 		
 		/** Relative height of the key expressed as a ratio of the default key height. */
-		public function get relativeHeight():Number { 
+		public function get relativeHeight():Number 
+		{ 
 			return _relativeHeight; 
 		}	
 
 		/** The type of key (character, navigation, modifier, etc.). */
-		public function get type():String { 
+		public function get type():String 
+		{ 
 			return _type; 
 		}
 
 		/** Vector of keys accessible by pressing and holding the key. */
-		public function get variants():Vector.<Key> {
+		public function get variants():Vector.<Key> 
+		{
 			return _variants;
 		}
 
 		/** The single character associated to the key. */
-		public function get character():String {
+		public function get character():String 
+		{
 			return _character;
 		}
 
@@ -619,7 +656,8 @@ package cc.cote.feathers.softkeyboard
 		 * 
 		 * @see cc.cote.feathers.softkeyboard.CharCode
 		 */
-		public function get charCode():int {
+		public function get charCode():int 
+		{
 			return _charCode;
 		}
 
@@ -627,25 +665,22 @@ package cc.cote.feathers.softkeyboard
 		 * Indicates if the key is associated with a printable character. Printable characters 
 		 * include all letters, numbers and symbols as well as the ENTER, SPACE and TAB keys.
 		 */
-		public function get isPrintable():Boolean {
-			return (
-				type == CHARACTER_KEY || 
+		public function get isPrintable():Boolean 
+		{
+			return type == CHARACTER_KEY || 
 				type == NUMERIC_KEYPAD_KEY ||
 				_charCode == Keyboard.ENTER ||
-				_charCode == Keyboard.TAB
-			);
+				_charCode == Keyboard.TAB;
 		}
 		
 		/** 
 		 * Indicates if the key is associated with a visible character. Visible characters include 
 		 * all letters, numbers and symbols.
 		 */
-		public function get isVisible():Boolean {
-			return (
-				(type == CHARACTER_KEY || type == NUMERIC_KEYPAD_KEY) 
-				&&
+		public function get isVisible():Boolean 
+		{
+			return (type == CHARACTER_KEY || type == NUMERIC_KEYPAD_KEY) &&
 				!(_charCode == Keyboard.ENTER || _charCode == Keyboard.TAB || _charCode == Keyboard.SPACE)
-			);
 		}
 
 		/**
@@ -653,66 +688,73 @@ package cc.cote.feathers.softkeyboard
 		 * <code>CAPS_LOCK</code> key. When the <code>CAPS_LOCK</code> is engaged, a different icon
 		 * is shown.
 		 */
-		public function get isSelected():Boolean {
+		public function get isSelected():Boolean 
+		{
 			return _isSelected;
 		}
 		
 		/** @private */
-		public function set isSelected(value:Boolean):void {
-			
-			if (value == _isSelected) return;
+		public function set isSelected(value:Boolean):void 
+		{
+			if (value == _isSelected) 
+			{
+				return;
+			}
 			_isSelected = value;
 			
 			// Swap icon (if an appropriate one has been defined)
-			if ( (_isSelected && selectedIcon) || (!_isSelected && icon) ) {
-				
+			if ((_isSelected && selectedIcon) || (!_isSelected && icon))
+			{
 				var index:uint = getChildIndex(_icon);
 				_icon = _isSelected ? selectedIcon : icon;
 				removeChildAt(index);
 				addChildAt(_icon, index);
 				invalidate(INVALIDATION_FLAG_SKIN);
-				
 			}
-			
 		}
 		
 		/**
 		 * Indicates if the key is 'special'. A 'special' key is any key that is not a regular 
 		 * alpha-numeric character or the space character key.
 		 */
-		public function get isSpecial():Boolean {
+		public function get isSpecial():Boolean 
+		{
 			return (type != CHARACTER_KEY);
 		}
 		
 		/** Indicates whether the key is a variant key (true) or a primary key (false) */
-		public function get isVariant():Boolean {
+		public function get isVariant():Boolean 
+		{
 			return _isVariant;
 		}
 		
 		/** @private */
-		public function set isVariant(value:Boolean):void {
+		public function set isVariant(value:Boolean):void 
+		{
 			_isVariant = value;
 		}	
 
 		/** Indicates whether the key is a variant key (true) or a primary key (false) */
-		public function get hasVariants():Boolean {
+		public function get hasVariants():Boolean 
+		{
 			return Boolean(_variants);
 		}
 
-		public function get variantsContainer():Sprite {
+		public function get variantsContainer():Sprite 
+		{
 			return _variantsContainer;
 		}
 
 		/** The Label object used by this key */
-		public function get label():Label {
+		public function get label():Label 
+		{
 			return _label;
 		}
 		
 		/** @private */
-		public function set label(value:Label):void {
+		public function set label(value:Label):void 
+		{
 			_label = value;
 		}
-		
 	}
-	
 }

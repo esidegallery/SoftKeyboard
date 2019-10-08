@@ -25,7 +25,7 @@ package {
 			stage.stageWidth = stage.stageHeight = 600;
 			
 			// Instantiate Feathers theme
-			new Theme(stage);
+			// new Theme(stage);
 			
 			
 			// Instantiate a keyboard with a single layout
