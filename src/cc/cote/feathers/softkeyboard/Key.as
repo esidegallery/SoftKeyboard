@@ -11,6 +11,7 @@ package cc.cote.feathers.softkeyboard
 {
 	import feathers.controls.Label;
 	import feathers.core.FeathersControl;
+	import feathers.skins.IStyleProvider;
 
 	import flash.display.BitmapData;
 	import flash.display.Shape;
@@ -32,25 +33,25 @@ package cc.cote.feathers.softkeyboard
 	/**
 	 * Dispatched when a key is pressed down.
 	 * 
-	 * @eventType cc.cote.feathers.softkeyboard.KeyEvent.KEY_DOWN
+	 * @eventType softKeyboard_keyDown
 	 */
-	[Event(name="cc.cote.feathers.softkeyboard.KeyEvent.keyDown",type="cc.cote.feathers.softkeyboard.KeyEvent")]
+	[Event(name="softKeyboard_keyDown", type="cc.cote.feathers.softkeyboard.KeyEvent")]
 	
 	/**
 	 * Dispatched when a the key is released. The release position must be above the key that was 
 	 * initially pressed down otherwise the event is not fired. This allows the user to cancel the 
 	 * <code>keyUp</code> event.
 	 * 
-	 * @eventType cc.cote.feathers.softkeyboard.KeyEvent.KEY_UP
+	 * @eventType softKeyboard_keyUp
 	 */
-	[Event(name="cc.cote.feathers.softkeyboard.KeyEvent.keyUp",type="cc.cote.feathers.softkeyboard.KeyEvent")]
+	[Event(name="softKeyboard_keyUp", type="cc.cote.feathers.softkeyboard.KeyEvent")]
 
 	/**
 	 * Dispatched when the variants for a key should be displayed.
 	 * 
-	 * @eventType cc.cote.feathers.softkeyboard.KeyEvent.SHOW_VARIANTS
+	 * @eventType softKeyboard_showVariants
 	 */
-	[Event(name="cc.cote.feathers.softkeyboard.KeyEvent.showVariants",type="cc.cote.feathers.softkeyboard.KeyEvent")]
+	[Event(name="softKeyboard_showVariants", type="cc.cote.feathers.softkeyboard.KeyEvent")]
 	
 	/**
 	 * The <code>Key</code> class creates individual soft-keyboard keys to use in keyboard 
@@ -109,6 +110,12 @@ package cc.cote.feathers.softkeyboard
 		
 		/** An identifier for lock keys. */
 		public static const LOCK_KEY:String = 'lockKey';
+
+		public static var globalStyleProvider:IStyleProvider;
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return globalStyleProvider;
+		}
 		
 		/**  
 		 * A layout (specified by its class) to switch to when the key is released. It is mostly 

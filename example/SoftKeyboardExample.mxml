@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<f:Application xmlns:f="library://ns.feathersui.com/mxml"
+               xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:softkeyboard="cc.cote.feathers.softkeyboard.*"
+               theme="Theme"
+               showStats="true">
+
+    <fx:Script>
+        <![CDATA[
+			import cc.cote.feathers.softkeyboard.KeyEvent;
+			import cc.cote.feathers.softkeyboard.layouts.EmailNumbersSymbolsSwitch;
+			import cc.cote.feathers.softkeyboard.layouts.EmailSwitch;
+			import cc.cote.feathers.softkeyboard.layouts.Layout;
+			import feathers.layout.AnchorLayoutData;
+			import cc.cote.feathers.softkeyboard.layouts.Qwerty;
+			import cc.cote.feathers.softkeyboard.layouts.NumbersSymbolsSwitch;
+			import cc.cote.feathers.softkeyboard.layouts.QwertySwitch;
+
+            override protected function initialize():void
+            {
+                super.initialize();
+                
+                softKeyboard.layouts = new <Layout>[
+                    new QwertySwitch(NumbersSymbolsSwitch),
+                    new NumbersSymbolsSwitch(QwertySwitch)
+                ];
+            }
+
+            override protected function draw():void
+            {
+                super.draw();
+            }
+
+            private function softKeyboard_keyUpHandler(e:KeyEvent):void 
+            {
+                trace(e);
+            }
+		]]>
+    </fx:Script>
+
+    <f:layout>
+        <f:AnchorLayout />
+    </f:layout>
+
+    <softkeyboard:SoftKeyboard id="softKeyboard"
+                               layoutData="{new AnchorLayoutData(NaN, NaN, NaN, NaN, 0, 0)}"
+                               width="500" height="200"
+                               softKeyboard_keyUp="softKeyboard_keyUpHandler(event)" />
+
+</f:Application>

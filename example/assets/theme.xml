@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:9d49789764c629a6b71a456e6793dbf8:e1d39033620b8fe058793c14f290ce37:2eb66953f63f4e156b49d392f3692ec3$ -->
+<TextureAtlas imagePath="theme.png" width="241" height="715">
+    <SubTexture name="MarkerFelt" x="1" y="1" rotated="true" width="239" height="505" frameX="-1" frameY="-1" frameWidth="512" frameHeight="256"/>
+    <SubTexture name="SoftKeyboardCalloutBackground" x="1" y="610" width="68" height="68"/>
+    <SubTexture name="SoftKeyboardCalloutBottomArrow" x="207" y="508" width="26" height="17"/>
+    <SubTexture name="SoftKeyboardCalloutLeftArrow" x="207" y="508" width="26" height="17"/>
+    <SubTexture name="SoftKeyboardCalloutRightArrow" x="207" y="508" width="26" height="17"/>
+    <SubTexture name="SoftKeyboardCalloutTopArrow" x="207" y="508" width="26" height="17"/>
+    <SubTexture name="SoftKeyboardGlobalBackground" x="1" y="508" width="100" height="100"/>
+    <SubTexture name="SoftKeyboardIconBackspace" x="207" y="527" width="25" height="17" frameX="0" frameY="-4" frameWidth="25" frameHeight="25"/>
+    <SubTexture name="SoftKeyboardIconCapsLock" x="175" y="664" width="25" height="18" frameX="0" frameY="-4" frameWidth="25" frameHeight="25"/>
+    <SubTexture name="SoftKeyboardIconCapsLockSelected" x="28" y="680" width="25" height="18" frameX="0" frameY="-4" frameWidth="25" frameHeight="25"/>
+    <SubTexture name="SoftKeyboardIconEnter" x="175" y="684" width="25" height="16" frameX="0" frameY="-6" frameWidth="25" frameHeight="25"/>
+    <SubTexture name="SoftKeyboardIconTab" x="1" y="680" width="25" height="24" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+    <SubTexture name="SoftKeyboardKeySkinHasVariantsDown" x="103" y="508" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinHasVariantsHover" x="155" y="508" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinHasVariantsUp" x="103" y="560" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinRegularDown" x="155" y="560" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinRegularHover" x="71" y="612" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinRegularUp" x="71" y="664" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinSpecialDown" x="123" y="612" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinSpecialHover" x="123" y="664" width="50" height="50"/>
+    <SubTexture name="SoftKeyboardKeySkinSpecialUp" x="175" y="612" width="50" height="50"/>
+</TextureAtlas>

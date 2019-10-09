@@ -25,30 +25,29 @@ package cc.cote.feathers.softkeyboard
      */
     public class KeyEvent extends Event
     {
-
         /**
          * The <code>KEY_UP</code> constant defines the value of the <code>type</code> property of a
          * <code>keyUp</code> event object.
          *
-         * @eventType cc.cote.feathers.softkeyboard.KeyEvent.keyUp
+         * @eventType softKeyboard_keyUp
          */
-        public static const KEY_UP:String = "cc.cote.feathers.softkeyboard.KeyEvent.keyUp";
+        public static const KEY_UP:String = "softKeyboard_keyUp";
 
         /**
          * The <code>KEY_DOWN</code> constant defines the value of the <code>type</code> property of
          * a <code>keyDown</code> event object.
          *
-         * @eventType cc.cote.feathers.softkeyboard.KeyEvent.keyDown
+         * @eventType softKeyboard_keyDown
          */
-        public static const KEY_DOWN:String = "cc.cote.feathers.softkeyboard.KeyEvent.keyDown";
+        public static const KEY_DOWN:String = "softKeyboard_keyDown";
 
         /**
          * The <code>SHOW_VARIANTS</code> constant defines the value of the <code>type</code>
          * property of a <code>showVariants</code> event object.
          *
-         * @eventType cc.cote.feathers.softkeyboard.KeyEvent.showVariants
+         * @eventType softKeyboard_showVariants
          */
-        public static const SHOW_VARIANTS:String = "cc.cote.feathers.softkeyboard.KeyEvent.showVariants";
+        public static const SHOW_VARIANTS:String = "softKeyboard_showVariants";
 
         private var _char:String;
         private var _charCode:uint;

@@ -417,7 +417,5 @@ package cc.cote.feathers.softkeyboard.keycollections
 			new Key('ẕ'.charCodeAt()),
 			new Key('ƶ'.charCodeAt())
 		];
-		
 	}
-	
 }

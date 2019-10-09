@@ -9,7 +9,6 @@ This library is provided "as is" with no guarantees whatsoever. Use it at your o
 
 package cc.cote.feathers.softkeyboard
 {
-	
 	/**
 	 * The <code>CharCode</code> class is an enumeration class containing constants associated to 
 	 * common characters or keys. Each constant contains the <code>charCode</code> value of the 
@@ -24,7 +23,6 @@ package cc.cote.feathers.softkeyboard
 	 */
 	public class CharCode
 	{
-		
 		/** Constant associated with the character code value for the special <code>SWITCH_LAYOUT</code> key. */
 		public static const SWITCH_LAYOUT:int = -1;
 		
@@ -357,7 +355,5 @@ package cc.cote.feathers.softkeyboard
 
 		/** Constant associated with the character code value for the <code>DELETE</code> key. */
 		public static const SCROLL_LOCK:int = 145;
-		
 	}
-	
 }

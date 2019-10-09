@@ -13,6 +13,8 @@ package cc.cote.feathers.softkeyboard
 
     import feathers.controls.Callout;
     import feathers.core.FeathersControl;
+    import feathers.layout.RelativePosition;
+    import feathers.skins.IStyleProvider;
 
     import flash.geom.Point;
     import flash.text.engine.TypographicCase;
@@ -20,22 +22,23 @@ package cc.cote.feathers.softkeyboard
 
     import starling.display.DisplayObject;
     import starling.display.Sprite;
-    import feathers.layout.RelativePosition;
+    import flash.events.SoftKeyboardTrigger;
+    import flash.text.SoftKeyboardType;
 
     /**
      * Dispatched when an on-screen key is pressed.
      *
-     * @eventType cc.cote.feathers.softkeyboard.KeyEvent.KEY_DOWN
+     * @eventType softKeyboard_keyDown
      */
-    [Event(name = "cc.cote.feathers.softkeyboard.KeyEvent.keyDown", type = "cc.cote.feathers.softkeyboard.KeyEvent")]
+    [Event(name="softKeyboard_keyDown", type="cc.cote.feathers.softkeyboard.KeyEvent")]
 
     /**
      * Dispatched when an on-screen key is released. The release must be above the key that was
      * initially pressed otherwise the event is not fired.
      *
-     * @eventType cc.cote.feathers.softkeyboard.KeyEvent.KEY_UP
+     * @eventType softKeyboard_keyUp
      */
-    [Event(name = "cc.cote.feathers.softkeyboard.KeyEvent.keyUp", type = "cc.cote.feathers.softkeyboard.KeyEvent")]
+    [Event(name="softKeyboard_keyUp", type="cc.cote.feathers.softkeyboard.KeyEvent")]
 
     /**
      * This class allows the creation of virtual on-screen keyboards. Various types of keyboard
@@ -114,6 +117,12 @@ package cc.cote.feathers.softkeyboard
         /** Version of this SoftKeyboard library */
         public const VERSION:String = '2.0-beta';
 
+        public static var globalStyleProvider:IStyleProvider;
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return globalStyleProvider;
+		}
+
         /** The background to use for the SoftKeyboard. */
         public var backgroundSkin:DisplayObject;
 
@@ -129,6 +138,14 @@ package cc.cote.feathers.softkeyboard
 
         /** A vector containing all layouts passed in via the constructor. */
         private var _layouts:Vector.<Layout>;
+        public function get layouts():Vector.<Layout>
+        {
+        	return _layouts;
+        }
+        public function set layouts(value:Vector.<Layout>):void
+        {
+        	_layouts = value;
+        }
 
         /** The index of the currently displayed layout. */
         private var _currentLayoutIndex:uint = 0;
@@ -148,48 +165,37 @@ package cc.cote.feathers.softkeyboard
          *
          * @throws Error First parameter must be a Layout object or a vector of Layout objects.
          */
-        public function SoftKeyboard(layouts:Object, width:Number = 320, height:Number = 160):void
+        public function SoftKeyboard():void
         {
-            // Check if a single layout or a vector of layouts was used
-            if (layouts is Vector.<Layout>)
-            {
-                _layouts = layouts as Vector.<Layout>;
-            }
-            else if (layouts is Layout)
-            {
-                _layouts = new <Layout>[layouts as Layout];
-            }
-            else
-            {
-                throw(new Error('First parameter must be a Layout object or a vector of Layout objects.'));
-            }
+            // // Check if a single layout or a vector of layouts was used
+            // if (layouts is Vector.<Layout>)
+            // {
+            //     _layouts = layouts as Vector.<Layout>;
+            // }
+            // else if (layouts is Layout)
+            // {
+            //     _layouts = new <Layout>[layouts as Layout];
+            // }
+            // else
+            // {
+            //     throw(new Error('First parameter must be a Layout object or a vector of Layout objects.'));
+            // }
 
             // Assign parameters locally
-            if (width > 0)
-            {
-                this.width = width;
-            }
-            if (height > 0)
-            {
-                this.height = height;
-            }
+            // if (width > 0)
+            // {
+                this.width = 500;
+            // }
+            // if (height > 0)
+            // {
+                this.height = 500;
+            // }
 
         }
 
         /** @private */
         override protected function initialize():void
         {
-            // Build all configurations from the specified layouts
-            for each (var layout:Layout in _layouts)
-            {
-                _configurations.push(_buildConfiguration(layout));
-            }
-
-            // Add the currently selected configuration to the stage and set up key listeners
-            addChild(_configurations[_currentLayoutIndex]);
-            _addKeyListenersToConfiguration(_configurations[_currentLayoutIndex]);
-            capsLock = _layouts[_currentLayoutIndex].capsLock;
-
             // Add background skin (if any has been specified)
             if (backgroundSkin)
             {
@@ -321,7 +327,6 @@ package cc.cote.feathers.softkeyboard
                 }
                 else
                 {
-
                     // Otherwise, go to next layout
                     if (layoutIndex + 1 < layouts.length)
                     {
@@ -331,7 +336,6 @@ package cc.cote.feathers.softkeyboard
                     {
                         layoutIndex = 0;
                     }
-
                 }
 
                 return;
@@ -371,6 +375,22 @@ package cc.cote.feathers.softkeyboard
         /** @private */
         override protected function draw():void
         {
+            var dataInvalid:Boolean = isInvalid(INVALIDATION_FLAG_DATA);
+
+            if (dataInvalid)
+            {
+                // Build all configurations from the specified layouts
+                for each (var layout:Layout in _layouts)
+                {
+                    _configurations.push(_buildConfiguration(layout));
+                }
+
+                // Add the currently selected configuration to the stage and set up key listeners
+                addChild(_configurations[_currentLayoutIndex]);
+                _addKeyListenersToConfiguration(_configurations[_currentLayoutIndex]);
+                capsLock = _layouts[_currentLayoutIndex].capsLock;
+            }
+
             setSizeInternal(actualWidth, actualHeight, false);
 
             // Fetch info about current keyboard
@@ -491,11 +511,11 @@ package cc.cote.feathers.softkeyboard
             }
         }
 
-        /** A vector of all Layout objects assigned to the keyboard. */
-        public function get layouts():Vector.<Layout>
-        {
-            return _layouts;
-        }
+        // /** A vector of all Layout objects assigned to the keyboard. */
+        // public function get layouts():Vector.<Layout>
+        // {
+        //     return _layouts;
+        // }
 
         /** The index of the currently displayed layout from the <code>layouts</code> vector. */
         public function get layoutIndex():uint
